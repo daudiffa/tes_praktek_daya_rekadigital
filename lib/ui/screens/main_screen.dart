@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tes_praktek_daya_rekadigital/ui/controllers/main_controllers.dart';
+import 'package:tes_praktek_daya_rekadigital/utils/date_utils.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -41,10 +42,7 @@ class MainScreen extends StatelessWidget {
                 case 1:
                   return TabBar(
                     controller: controller.tabController,
-                    tabs: [
-                      Text("Hari Ini"),
-                      Text("Besok"),
-                    ]
+                    tabs: controller.dayList.map((day) => Text(day)).toList()
                   );
 
                 case 2:
@@ -52,10 +50,26 @@ class MainScreen extends StatelessWidget {
                     height: 100,
                     child: TabBarView(
                         controller: controller.tabController,
-                        children: [
-                          Text("Hari Ini"),
-                          Text("Besok"),
-                        ],
+                        children: List.generate(
+                          controller.forecastList.length, (index) {
+                            final dayForecast = controller.forecastList.entries.toList()[index];
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: dayForecast.value.length,
+                              itemBuilder: (context, index) {
+                                final hourForecast = dayForecast.value[index];
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(hourForecast.timestamp.toHourMinute()),
+                                    Text(hourForecast.weather),
+                                    Text(hourForecast.temperature),
+                                  ],
+                                );
+                              }
+                            );
+                          }
+                        ),
                       ),
                   );
 

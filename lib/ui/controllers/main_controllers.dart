@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
@@ -18,7 +19,7 @@ class MainController extends ChangeNotifier {
 
   // ---- States ----
   /// The controller for the main `TabBar` and `TabBarView`
-  final tabController = TabController(length: 2, vsync: TabTickerProvider());
+  TabController tabController = TabController(length: 1, vsync: TabTickerProvider());
 
   /// The data model to be displayed in the screen
   ProvinceForecastModel? _dataModel;
@@ -45,15 +46,32 @@ class MainController extends ChangeNotifier {
   String get currentWeather => _dataModel?.getRegencyModel(currentRegency)
       .getForecastModel(_currentTimestamp?.toBMKG() ?? "").weather ?? "";
 
+  /// Get the list of available day for the current regency
+  List<String> get dayList => _dataModel?.getRegencyModel(currentRegency)
+      .forecastModel.map((e) => e.timestamp.toDayMonth()).toSet().toList()
+      ?? const ["Hari Ini"];
+
+  /// Get the list of forecast data in the current regency, grouped by date
+  Map<String, List<ForecastModel>> get forecastList =>
+      groupBy<ForecastModel, String>(
+          _dataModel?.getRegencyModel(currentRegency).forecastModel ?? [],
+              (e) => e.timestamp.toDayMonth()
+      );
+
   // ---- Methods ----
   void fetchData() {
     BMKGData.fetchData().then((value) {
       _dataModel = value;
+
       final regencyList = value.regencyForecast.map((e) => e.regencyName).toList()..shuffle();
       _currentRegency = regencyList.first;
+
       final timestampList = value.getRegencyModel(regencyList.first).forecastModel
           .map((e) => e.timestamp).toList()..shuffle();
       _currentTimestamp = timestampList.first;
+
+      tabController = TabController(length: dayList.length, vsync: TabTickerProvider());
+
       notifyListeners();
     });
   }

@@ -3,8 +3,11 @@
 Tes praktek lamaran Mobile Developer dari Daya Rekadigital
 
 ## Done:
-- Kerangka layout
+- Tampilan versi kasar
 - Integrasi data BMKG
 
 ## Todo:
-- Menampilkan semua data yang diminta penugasan
+- Perapian ukuran dan posisi _widget_
+- Penambahan _dropdown_ dan fitur ganti lokasi
+- Penambahan gambar simbol cuaca
+- Menampilkan _loading indicator_ selama fetching data
