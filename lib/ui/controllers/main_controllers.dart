@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:tes_praktek_daya_rekadigital/data/remote/bmkg_data.dart';
 import 'package:tes_praktek_daya_rekadigital/data/models/forecast_model.dart';
 import 'package:tes_praktek_daya_rekadigital/utils/date_utils.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 /// The main `ChangeNotifier` class of this application.
 ///
@@ -110,6 +111,23 @@ class MainController extends ChangeNotifier {
   }
 
   // ---- Methods ----
+  /// Get the icon for the currently-displayed weather
+  IconData? getWeatherIcon(String weather) => switch (weather) {
+    "Cerah" => WeatherIcons.day_sunny,
+    "Cerah Berawan" => WeatherIcons.day_sunny_overcast,
+    "Berawan" => WeatherIcons.day_cloudy,
+    "Berawan Tebal" => WeatherIcons.cloud,
+    "Udara Kabur" => WeatherIcons.day_haze,
+    "Asap" => WeatherIcons.smoke,
+    "Kabut" => WeatherIcons.fog,
+    "Hujan Ringan" => WeatherIcons.showers,
+    "Hujan Sedang" => WeatherIcons.rain_mix,
+    "Hujan Lebat" => WeatherIcons.rain,
+    "Hujan Lokal" => WeatherIcons.day_rain,
+    "Hujan Petir" => WeatherIcons.thunderstorm,
+    _ => null,
+  };
+
   void fetchData() {
     BMKGData.fetchData(currentProvince).then((value) {
       _dataModel = value;

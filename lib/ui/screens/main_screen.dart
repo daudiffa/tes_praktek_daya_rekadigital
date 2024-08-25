@@ -47,6 +47,7 @@ class MainScreen extends StatelessWidget {
                         Text(controller.currentTimestamp),
                         Text(controller.currentTemperature),
                         Text(controller.currentWeather),
+                        Icon(controller.getWeatherIcon(controller.currentWeather))
                       ],
                     ),
                   );
@@ -74,7 +75,7 @@ class MainScreen extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(hourForecast.timestamp.toHourMinute()),
-                                    Text(hourForecast.weather),
+                                    Icon(controller.getWeatherIcon(hourForecast.weather)),
                                     Text(hourForecast.temperature),
                                   ],
                                 );
