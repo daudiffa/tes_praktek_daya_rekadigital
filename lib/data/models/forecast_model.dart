@@ -56,8 +56,6 @@ class RegencyForecastModel {
 
   /// Get a forecast model by timestamp
   ForecastModel getForecastModel(String timestamp) {
-    print(forecastModel.map((e) => e.timestamp));
-    print(timestamp);
     return forecastModel.where((e) => e.timestamp.toBMKG() == timestamp).single;
   }
 }
@@ -77,6 +75,26 @@ class ForecastModel {
   factory ForecastModel.fromXML(XmlNode xml, String timestamp) => ForecastModel(
     timestamp: DateUtils.fromBMKG(timestamp),
     temperature: xml.xpath("parameter[@id='t']/timerange[@datetime='$timestamp']/value[@unit='C']").single.innerText,
-    weather: xml.xpath("parameter[@id='weather']/timerange[@datetime='$timestamp']/value").single.innerText,
+    weather: weatherCodeToString(xml.xpath("parameter[@id='weather']/timerange[@datetime='$timestamp']/value").single.innerText),
   );
+
+  /// Convert the weather code to weather string, based on the mapping given in
+  /// https://data.bmkg.go.id/prakiraan-cuaca/
+  static String weatherCodeToString(String code) => switch (code) {
+    "0" => "Cerah",
+    "1" => "Cerah Berawan",
+    "2" => "Cerah Berawan",
+    "3" => "Berawan",
+    "4" => "Berawan Tebal",
+    "5" => "Udara Kabur",
+    "10" => "Asap",
+    "45" => "Kabut",
+    "60" => "Hujan Ringan",
+    "61" => "Hujan Sedang",
+    "63" => "Hujan Lebat",
+    "80" => "Hujan Lokal",
+    "95" => "Hujan Petir",
+    "97" => "Hujan Petir",
+    _ => throw RangeError("Invalid weather code")
+  };
 }

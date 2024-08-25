@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:intl/intl.dart';
 import 'package:tes_praktek_daya_rekadigital/data/remote/bmkg_data.dart';
 import 'package:tes_praktek_daya_rekadigital/data/models/forecast_model.dart';
 import 'package:tes_praktek_daya_rekadigital/utils/date_utils.dart';
@@ -33,11 +34,12 @@ class MainController extends ChangeNotifier {
   String get currentRegency => _currentRegency ?? "";
 
   /// Get the currently-displayed date and time
-  String get currentTimestamp => _currentTimestamp.toString();
+  String get currentTimestamp => (_currentTimestamp != null)
+      ? DateFormat("EEEE, d MMMM hh:mm", "id_ID").format(_currentTimestamp!) : "";
 
   /// Get the currently-displayed temperature
-  String get currentTemperature => _dataModel?.getRegencyModel(currentRegency)
-      .getForecastModel(_currentTimestamp?.toBMKG() ?? "").temperature ?? "";
+  String get currentTemperature => "${_dataModel?.getRegencyModel(currentRegency)
+      .getForecastModel(_currentTimestamp?.toBMKG() ?? "").temperature}°";
 
   /// Get the currently-displayed weather
   String get currentWeather => _dataModel?.getRegencyModel(currentRegency)
