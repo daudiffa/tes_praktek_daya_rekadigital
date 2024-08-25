@@ -7,6 +7,8 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = MainController.instance;
+    controller.fetchData();
+
     return Material(
       child: ListenableBuilder(
         listenable: controller,
@@ -21,9 +23,18 @@ class MainScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: NetworkImage(
-                            "https://www.publicdomainpictures.net/pictures/10000/velka/1-1214836242AGCu.jpg"
+                            "https://upload.wikimedia.org/wikipedia/commons/5/52/Sky_surface.jpg"
                         )
                       )
+                    ),
+                    child: Column(
+                      children: [
+                        Text("Aceh"),
+                        Text(controller.currentRegency),
+                        Text(controller.currentTimestamp),
+                        Text(controller.currentTemperature),
+                        Text(controller.currentWeather),
+                      ],
                     ),
                   );
 
