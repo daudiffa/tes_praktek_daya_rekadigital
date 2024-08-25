@@ -20,6 +20,7 @@ class MainController extends ChangeNotifier {
   /// This constructor also calls the necessary initial methods such as
   /// `fetchData`
   MainController._() {
+    _initBrightnessListener();
     fetchData();
   }
 
@@ -62,7 +63,9 @@ class MainController extends ChangeNotifier {
   ];
 
   // ---- States ----
-  bool useDarkMode = SchedulerBinding.instance.platformDispatcher.platformBrightness == Brightness.dark;
+  /// Get and set whether the dark mode is being used
+  bool useDarkMode =
+      SchedulerBinding.instance.platformDispatcher.platformBrightness == Brightness.dark;
 
   /// The controller for the main `TabBar` and `TabBarView`
   TabController tabController = TabController(length: 0, vsync: TabTickerProvider());
@@ -140,12 +143,16 @@ class MainController extends ChangeNotifier {
     _ => null,
   };
 
-  void fetchData() {
-    SchedulerBinding.instance.platformDispatcher.onPlatformBrightnessChanged = () {
-      useDarkMode = SchedulerBinding.instance.platformDispatcher.platformBrightness == Brightness.dark;
+  void _initBrightnessListener() {
+    final dispatcher = SchedulerBinding.instance.platformDispatcher;
+    dispatcher.onPlatformBrightnessChanged = () {
+      useDarkMode = dispatcher.platformBrightness == Brightness.dark;
       notifyListeners();
     };
+  }
 
+  /// Method to get the BMKG data and display it on the screen
+  void fetchData() {
     BMKGData.fetchData(currentProvince).then((value) {
       _dataModel = value;
 
