@@ -57,6 +57,8 @@ class MainController extends ChangeNotifier {
   ];
 
   // ---- States ----
+  bool useDarkMode = SchedulerBinding.instance.platformDispatcher.platformBrightness == Brightness.dark;
+
   /// The controller for the main `TabBar` and `TabBarView`
   TabController tabController = TabController(length: 0, vsync: TabTickerProvider());
 
@@ -73,6 +75,11 @@ class MainController extends ChangeNotifier {
   DateTime? _currentTimestamp;
 
   // ---- Getters ----
+  /// Get the appropriate background for the screen, based on the theme mode
+  String get backgroundImage => (useDarkMode)
+      ? "https://upload.wikimedia.org/wikipedia/commons/9/98/C%C3%A9vennes_France_night_sky_with_stars_03.jpg"
+      : "https://upload.wikimedia.org/wikipedia/commons/f/f9/Sky_gradient_mid_afternoon_looking_north.jpg";
+
   /// Get the current province name
   String get currentProvince => _currentProvince;
 
@@ -129,6 +136,11 @@ class MainController extends ChangeNotifier {
   };
 
   void fetchData() {
+    SchedulerBinding.instance.platformDispatcher.onPlatformBrightnessChanged = () {
+      useDarkMode = SchedulerBinding.instance.platformDispatcher.platformBrightness == Brightness.dark;
+      notifyListeners();
+    };
+
     BMKGData.fetchData(currentProvince).then((value) {
       _dataModel = value;
 
@@ -144,6 +156,7 @@ class MainController extends ChangeNotifier {
       notifyListeners();
     });
   }
+
 }
 
 /// Custom ticker used for `TabController` objects

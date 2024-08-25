@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:tes_praktek_daya_rekadigital/ui/controllers/main_controllers.dart';
 import 'package:tes_praktek_daya_rekadigital/utils/date_utils.dart';
 
@@ -9,6 +10,8 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = MainController.instance;
     controller.fetchData();
+
+    SchedulerBinding.instance.platformDispatcher.onPlatformBrightnessChanged;
 
     return Material(
       child: ListenableBuilder(
@@ -24,8 +27,9 @@ class MainScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: NetworkImage(
-                            "https://upload.wikimedia.org/wikipedia/commons/5/52/Sky_surface.jpg"
-                        )
+                          controller.backgroundImage
+                        ),
+                        fit: BoxFit.cover
                       )
                     ),
                     child: Column(
