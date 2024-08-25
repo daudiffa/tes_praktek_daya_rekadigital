@@ -15,6 +15,16 @@ class MainScreen extends StatelessWidget {
       child: ListenableBuilder(
         listenable: controller,
         builder: (context, staticChild) {
+          if (controller.isLoading) {
+            return const Center(
+              child: SizedBox(
+                width: 50,
+                height: 50,
+                child: CircularProgressIndicator()
+              ),
+            );
+          }
+
           return ListView.builder(
             itemCount: 3,
             itemBuilder: (context, index) {

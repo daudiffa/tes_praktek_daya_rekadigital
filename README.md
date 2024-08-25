@@ -3,12 +3,12 @@
 Tes praktek lamaran Mobile Developer dari Daya Rekadigital
 
 ## Done:
-- Tampilan versi kasar (sudah dengan ikon cuaca)
+- Tampilan UI
+  - Responsif terhadap orientasi layar dan mode gelap
 - Integrasi data BMKG
+  - Menampilkan indikator _loading_ selama data dimuat
 - Pengguna dapat memilih provinsi melalui dropdown
 
 ## Todo:
-- Perapian ukuran dan posisi _widget_
 - Penambahan fitur ganti kota/kabupaten
 - Penggunaan dua bahasa yang tersedia
-- Menampilkan _loading indicator_ selama fetching data

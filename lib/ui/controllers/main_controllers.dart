@@ -67,6 +67,9 @@ class MainController extends ChangeNotifier {
   bool useDarkMode =
       SchedulerBinding.instance.platformDispatcher.platformBrightness == Brightness.dark;
 
+  /// Get or set whether the data is still being loaded
+  bool isLoading = false;
+
   /// The controller for the main `TabBar` and `TabBarView`
   TabController tabController = TabController(length: 0, vsync: TabTickerProvider());
 
@@ -152,8 +155,10 @@ class MainController extends ChangeNotifier {
   }
 
   /// Method to get the BMKG data and display it on the screen
-  void fetchData() {
-    BMKGData.fetchData(currentProvince).then((value) {
+  Future<void> fetchData() async {
+    isLoading = true;
+
+    await BMKGData.fetchData(currentProvince).then((value) {
       _dataModel = value;
 
       final regencyList = value.regencyForecast.map((e) => e.regencyName).toList()..shuffle();
@@ -164,9 +169,10 @@ class MainController extends ChangeNotifier {
       _currentTimestamp = timestampList.first;
 
       tabController = TabController(length: dayList.length, vsync: TabTickerProvider());
-
-      notifyListeners();
     });
+
+    isLoading = false;
+    notifyListeners();
   }
 
 }
