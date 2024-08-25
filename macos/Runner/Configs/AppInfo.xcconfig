@@ -1,0 +1,14 @@
+// Application-level settings for the Runner target.
+//
+// This may be replaced with something auto-generated from metadata (e.g., pubspec.yaml) in the
+// future. If not, the values below would default to using the project name when this becomes a
+// 'flutter create' template.
+
+// The application's name. By default this is also the title of the Flutter window.
+PRODUCT_NAME = tes_praktek_daya_rekadigital
+
+// The application's bundle identifier
+PRODUCT_BUNDLE_IDENTIFIER = id.daud.tesPraktekDayaRekadigital
+
+// The copyright displayed in application information
+PRODUCT_COPYRIGHT = Copyright © 2024 id.daud. All rights reserved.
