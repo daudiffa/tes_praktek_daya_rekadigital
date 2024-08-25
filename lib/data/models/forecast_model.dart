@@ -88,6 +88,7 @@ class ForecastModel {
     "4" => "Berawan Tebal",
     "5" => "Udara Kabur",
     "10" => "Asap",
+    "17" => "Asap", // Not in the original mapping
     "45" => "Kabut",
     "60" => "Hujan Ringan",
     "61" => "Hujan Sedang",
@@ -95,6 +96,6 @@ class ForecastModel {
     "80" => "Hujan Lokal",
     "95" => "Hujan Petir",
     "97" => "Hujan Petir",
-    _ => throw RangeError("Invalid weather code")
+    _ => throw RangeError("Invalid weather code: $code")
   };
 }

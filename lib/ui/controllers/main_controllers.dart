@@ -17,12 +17,53 @@ class MainController extends ChangeNotifier {
   /// The private constructor used to create the singleton instance
   MainController._();
 
+  // ---- Static data ----
+  final provinceList = [
+    "Aceh",
+    "Bali",
+    "Bangka Belitung",
+    "Banten",
+    "Bengkulu",
+    "DI Yogyakarta",
+    "DKI Jakarta",
+    "Gorontalo",
+    "Jambi",
+    "Jawa Barat",
+    "Jawa Tengah",
+    "Jawa Timur",
+    "Kalimantan Barat",
+    "Kalimantan Selatan",
+    "Kalimantan Tengah",
+    "Kalimantan Timur",
+    "Kalimantan Utara",
+    "Kepulauan Riau",
+    "Lampung",
+    "Maluku",
+    "Maluku Utara",
+    "Nusa Tenggara Barat",
+    "Nusa Tenggara Timur",
+    "Papua",
+    "Papua Barat",
+    "Riau",
+    "Sulawesi Barat",
+    "Sulawesi Selatan",
+    "Sulawesi Tengah",
+    "Sulawesi Tenggara",
+    "Sulawesi Utara",
+    "Sumatera Barat",
+    "Sumatera Selatan",
+    "Sumatera Utara",
+  ];
+
   // ---- States ----
   /// The controller for the main `TabBar` and `TabBarView`
-  TabController tabController = TabController(length: 1, vsync: TabTickerProvider());
+  TabController tabController = TabController(length: 0, vsync: TabTickerProvider());
 
   /// The data model to be displayed in the screen
   ProvinceForecastModel? _dataModel;
+
+  /// The currently-displayed city/regency name
+  String _currentProvince = "Aceh";
 
   /// The currently-displayed city/regency name
   String? _currentRegency;
@@ -31,6 +72,9 @@ class MainController extends ChangeNotifier {
   DateTime? _currentTimestamp;
 
   // ---- Getters ----
+  /// Get the current province name
+  String get currentProvince => _currentProvince;
+
   /// Get the current city/regency name
   String get currentRegency => _currentRegency ?? "";
 
@@ -49,7 +93,7 @@ class MainController extends ChangeNotifier {
   /// Get the list of available day for the current regency
   List<String> get dayList => _dataModel?.getRegencyModel(currentRegency)
       .forecastModel.map((e) => e.timestamp.toDayMonth()).toSet().toList()
-      ?? const ["Hari Ini"];
+      ?? const [];
 
   /// Get the list of forecast data in the current regency, grouped by date
   Map<String, List<ForecastModel>> get forecastList =>
@@ -58,9 +102,16 @@ class MainController extends ChangeNotifier {
               (e) => e.timestamp.toDayMonth()
       );
 
+  // ---- Setters ----
+  set currentProvince(String selectedProvince) {
+    _currentProvince = selectedProvince;
+    fetchData();
+    notifyListeners();
+  }
+
   // ---- Methods ----
   void fetchData() {
-    BMKGData.fetchData().then((value) {
+    BMKGData.fetchData(currentProvince).then((value) {
       _dataModel = value;
 
       final regencyList = value.regencyForecast.map((e) => e.regencyName).toList()..shuffle();

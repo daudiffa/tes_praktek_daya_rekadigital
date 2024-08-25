@@ -30,7 +30,19 @@ class MainScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        Text("Aceh"),
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            isDense: true,
+                            value: controller.currentProvince,
+                            items: List.generate(controller.provinceList.length, (index) {
+                              return DropdownMenuItem(
+                                  value: controller.provinceList[index],
+                                  child: Text(controller.provinceList[index])
+                                );
+                              }),
+                            onChanged: (value) => controller.currentProvince = value!
+                          )
+                        ),
                         Text(controller.currentRegency),
                         Text(controller.currentTimestamp),
                         Text(controller.currentTemperature),
