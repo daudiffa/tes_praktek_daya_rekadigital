@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -73,6 +75,9 @@ class MainController extends ChangeNotifier {
   /// The controller for the main `TabBar` and `TabBarView`
   TabController tabController = TabController(length: 0, vsync: TabTickerProvider());
 
+  /// The timer for city/regency rotator
+  Timer? _regencyRotatorTimer;
+
   /// The data model to be displayed in the screen
   ProvinceForecastModel? _dataModel;
 
@@ -108,6 +113,11 @@ class MainController extends ChangeNotifier {
   /// Get the currently-displayed weather
   String get currentWeather => _dataModel?.getRegencyModel(currentRegency)
       .getForecastModel(_currentTimestamp?.toBMKG() ?? "").weather ?? "";
+
+  /// Get the list of cities and regencies in the current province
+  List<String> get regencyList => _dataModel?.regencyForecast
+      .where((e) => e.forecastModel.isNotEmpty)
+      .map((e) => e.regencyName).toList() ?? [];
 
   /// Get the list of available day for the current regency
   List<String> get dayList => _dataModel?.getRegencyModel(currentRegency)
@@ -161,12 +171,24 @@ class MainController extends ChangeNotifier {
     await BMKGData.fetchData(currentProvince).then((value) {
       _dataModel = value;
 
-      final regencyList = value.regencyForecast.map((e) => e.regencyName).toList()..shuffle();
+      final currentRegency = regencyList.first;
       _currentRegency = regencyList.first;
+      _currentTimestamp = value.getRegencyModel(currentRegency).forecastModel
+          .map((e) => e.timestamp).toList().last;
 
-      final timestampList = value.getRegencyModel(regencyList.first).forecastModel
-          .map((e) => e.timestamp).toList()..shuffle();
-      _currentTimestamp = timestampList.first;
+      // Rotate the current regency every 5 second until the province is changed again
+      if (_regencyRotatorTimer != null) {
+        _regencyRotatorTimer?.cancel();
+      }
+      _regencyRotatorTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+        final currentIndex = regencyList.indexOf(_currentRegency!);
+        final nextRegency = regencyList[(currentIndex + 1) % regencyList.length];
+        _currentRegency = nextRegency;
+        _currentTimestamp = _dataModel!.getRegencyModel(nextRegency).forecastModel
+            .map((e) => e.timestamp).toList().last;
+
+        notifyListeners();
+      });
 
       tabController = TabController(length: dayList.length, vsync: TabTickerProvider());
     });
