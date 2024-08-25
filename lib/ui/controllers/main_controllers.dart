@@ -16,7 +16,12 @@ class MainController extends ChangeNotifier {
   static final instance = MainController._();
 
   /// The private constructor used to create the singleton instance
-  MainController._();
+  ///
+  /// This constructor also calls the necessary initial methods such as
+  /// `fetchData`
+  MainController._() {
+    fetchData();
+  }
 
   // ---- Static data ----
   final provinceList = [

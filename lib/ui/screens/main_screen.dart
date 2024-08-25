@@ -8,7 +8,6 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = MainController.instance;
-    controller.fetchData();
 
     final isPortrait = MediaQuery.orientationOf(context) == Orientation.portrait;
 
