@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:tes_praktek_daya_rekadigital/ui/controllers/main_controllers.dart';
 import 'package:tes_praktek_daya_rekadigital/utils/date_utils.dart';
 
@@ -11,7 +10,7 @@ class MainScreen extends StatelessWidget {
     final controller = MainController.instance;
     controller.fetchData();
 
-    SchedulerBinding.instance.platformDispatcher.onPlatformBrightnessChanged;
+    final isPortrait = MediaQuery.orientationOf(context) == Orientation.portrait;
 
     return Material(
       child: ListenableBuilder(
@@ -23,7 +22,7 @@ class MainScreen extends StatelessWidget {
               switch (index) {
                 case 0:
                   return Container(
-                    height: 500,
+                    height: (isPortrait) ? 500 : 350,
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
                       image: DecorationImage(
